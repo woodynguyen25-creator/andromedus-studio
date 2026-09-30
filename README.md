@@ -1,9 +1,18 @@
-# Andromedus Studio — holding page
+# Andromedus Studio — andromedusstudio.com
 
-The temporary page at [andromedusstudio.com](https://andromedusstudio.com) while the full site is finished.
+The public site. The working copy lives privately in `lucky-dog-landing/orbit.html`; this repo only holds released builds.
 
-- `src/index.template.html` — the page; `{{BIG}}` / `{{SUB}}` are filled with the wordmark
-- `tools/build.js` — draws the wordmark with our own Andromedus Titles glyphs (`tools/andromedus-lettering.js`) and writes `index.html`, `favicon.svg`, `CNAME`
-- Build: `node tools/build.js`
+## Release a new version
+```
+node tools/pull-site.js          # builds index.html from the working copy (refuses if a guard fails)
+git add -A && git commit -m "release: <what changed>" && git push
+```
+GitHub Pages redeploys `main` in about a minute.
 
-Served by GitHub Pages from `main`.
+`pull-site.js` sets the violet build, adds the page identity (title, description, share tags, favicon), points every
+"Start the conversation" at hello@andromedusstudio.com, and ships only work cleared for public view (Kairo, Speedy Cleans).
+It fails the build if anything private or a dead `href="#"` button gets through.
+
+## Fallback
+`holding.html` is the coming-soon page (`node tools/build.js` rebuilds it from `src/index.template.html`).
+To roll back to it: copy `holding.html` over `index.html`, commit, push.

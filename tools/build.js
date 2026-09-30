@@ -24,7 +24,7 @@ const tpl = fs.readFileSync(path.join(root, 'src', 'index.template.html'), 'utf8
 const html = tpl.replace('{{BIG}}', big).replace('{{SUB}}', sub);
 if (html.includes('{{')) throw new Error('unfilled placeholder in template');
 
-fs.writeFileSync(path.join(root, 'index.html'), html);
+fs.writeFileSync(path.join(root, 'holding.html'), html); /* the coming-soon page, kept as a fallback (the real site is index.html) */
 fs.writeFileSync(path.join(root, 'favicon.svg'), hole.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
 fs.writeFileSync(path.join(root, 'CNAME'), 'andromedusstudio.com\n');
 console.log('built index.html', html.length, 'bytes');
