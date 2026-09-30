@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Andromedus Studio</title>
+<meta name="description" content="Andromedus Studio is an AI-native studio. We help brands grow: identity, websites and the systems behind them. The full site is arriving soon.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="Andromedus Studio">
+<meta property="og:description" content="An AI-native studio. We help brands grow. The full site is arriving soon.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://andromedusstudio.com/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,560&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #edeae4;
+    --ink-soft: rgba(237, 234, 228, 0.66);
+    --violet: #b9a6ff;
+    --violet-dim: rgba(185, 166, 255, 0.62);
+    --line: rgba(185, 166, 255, 0.34);
+    --bg: #000;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); }
+  body { font-family: 'Bricolage Grotesque', system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  #sky { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  .veil { position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 62% 44% at 50% 50%, rgba(0,0,0,0.72), rgba(0,0,0,0) 72%); }
+  main { position: relative; min-height: 100%; min-height: 100dvh; display: grid; place-items: center; padding: 48px 16px 88px; }
+  .stack { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 920px; }
+  .kicker { font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.34em; text-transform: uppercase;
+    color: var(--violet-dim); margin: 0 0 28px; opacity: 0; animation: rise 1.2s var(--ease) 0.2s forwards; }
+  h1 { margin: 0; width: min(88vw, 860px); line-height: 0; }
+  h1 svg { width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 0 18px rgba(150, 120, 255, 0.35)); }
+  .sub { width: min(40vw, 250px); margin-top: clamp(14px, 2.4vw, 22px); line-height: 0; color: var(--violet); }
+  .sub svg { width: 100%; height: auto; overflow: visible; }
+  .write path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: write 1.6s var(--ease) forwards; }
+  .lede { font-weight: 300; font-size: clamp(1.02rem, 0.92rem + 0.5vw, 1.28rem); line-height: 1.55; color: var(--ink-soft);
+    max-width: 34ch; margin: clamp(34px, 5vw, 52px) 0 0; opacity: 0; animation: rise 1.4s var(--ease) 1.9s forwards; }
+  .soon { font-family: 'Space Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--violet-dim); margin: 30px 0 0; display: inline-flex; align-items: center; gap: 12px;
+    opacity: 0; animation: rise 1.4s var(--ease) 2.2s forwards; }
+  .soon::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--violet);
+    box-shadow: 0 0 10px var(--violet); animation: pulse 2.6s ease-in-out infinite; }
+  .mail { margin-top: 34px; font-family: 'Space Mono', ui-monospace, monospace; font-size: 13px; letter-spacing: 0.06em;
+    color: var(--ink); text-decoration: none; padding: 14px 26px; border: 1px solid var(--line); border-radius: 999px;
+    background: rgba(20, 12, 44, 0.35); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    transition: border-color 0.4s var(--ease), background 0.4s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease);
+    opacity: 0; animation: rise 1.4s var(--ease) 2.45s forwards; }
+  .mail:hover { border-color: var(--violet); background: rgba(60, 38, 130, 0.35); box-shadow: 0 0 28px rgba(150, 120, 255, 0.28); transform: translateY(-1px); }
+  .mail:focus-visible { outline: 2px solid var(--violet); outline-offset: 4px; }
+  .mail:active { transform: translateY(0); }
+  footer { position: fixed; left: 0; right: 0; bottom: 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom));
+    display: flex; justify-content: center; font-family: 'Space Mono', ui-monospace, monospace; font-size: 10px;
+    letter-spacing: 0.24em; text-transform: uppercase; color: rgba(237, 234, 228, 0.36); pointer-events: none; }
+  @keyframes write { to { stroke-dashoffset: 0; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes pulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+  @media (max-width: 560px) {
+    .kicker { letter-spacing: 0.24em; margin-bottom: 22px; }
+    .sub { width: min(46vw, 180px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .write path { animation: none; stroke-dashoffset: 0; }
+    .kicker, .lede, .soon, .mail { animation: none; opacity: 1; }
+    .soon::before { animation: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>
+<main>
+  <div class="stack">
+    <p class="kicker">An AI-native studio</p>
+    <h1 class="write">{{BIG}}</h1>
+    <div class="sub write">{{SUB}}</div>
+    <p class="lede">We help brands grow: the name people remember, the site that works for you, and the systems that answer when you can't.</p>
+    <p class="soon">The full site is arriving soon</p>
+    <a class="mail" href="mailto:hello@andromedusstudio.com">hello@andromedusstudio.com</a>
+  </div>
+</main>
+<footer>&copy; 2026 Andromedus Studio</footer>
+<script>
+/* The far side: a galaxy band seen from inside, dust pre-rendered once, stars twinkle and drift with the pointer.
+   Canvas 2D only - no WebGL - so it stays light on any phone. */
+(function () {
+  const cv = document.getElementById('sky');
+  const ctx = cv.getContext('2d');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const BAND = { x: 1, y: -0.42 };
+  const bl = Math.hypot(BAND.x, BAND.y); BAND.x /= bl; BAND.y /= bl;
+  const PALETTE = [[143, 163, 255], [189, 173, 255], [243, 246, 255], [243, 246, 255], [255, 204, 122]];
+  let W = 0, H = 0, D = 1, stars = [], dust = null, jewels = [], px = 0, py = 0, tx = 0, ty = 0, raf = 0;
+
+  let seed = 7;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const gauss = () => (rnd() + rnd() + rnd() - 1.5) / 1.5;
+
+  function bandPoint(spread) {
+    const along = (rnd() * 1.6 - 0.8) * Math.hypot(W, H);
+    const across = gauss() * spread * H + Math.sin(along / W * 5) * 0.04 * H;
+    return [W / 2 + BAND.x * along - BAND.y * across, H * 0.52 + BAND.y * along + BAND.x * across];
+  }
+
+  function build() {
+    seed = 7;
+    const n = Math.min(1400, Math.round(W * H / 1300));
+    stars = [];
+    for (let i = 0; i < n; i++) {
+      const inBand = rnd() < 0.34;
+      const [x, y] = inBand ? bandPoint(0.11) : [rnd() * W, rnd() * H];
+      const mag = Math.pow(rnd(), 2.6);
+      stars.push({ x, y, r: 0.35 + mag * 1.35, a: 0.22 + mag * 0.7, c: PALETTE[Math.floor(rnd() * PALETTE.length)],
+        z: 0.2 + rnd() * 0.8, ph: rnd() * 6.283, sp: 0.4 + rnd() * 1.4 });
+    }
+    /* the three bright stars stay outside the band the words sit in (roughly y .2 to .8) */
+    jewels = [
+      { fx: 0.14, fy: 0.13, c: [255, 232, 196], s: 1.0 },
+      { fx: 0.87, fy: 0.09, c: [255, 150, 90], s: 0.85 },
+      { fx: 0.76, fy: 0.87, c: [150, 190, 255], s: 0.9 },
+    ];
+    dust = document.createElement('canvas');
+    dust.width = Math.round(W * D); dust.height = Math.round(H * D);
+    const g = dust.getContext('2d');
+    g.scale(D, D);
+    g.globalCompositeOperation = 'lighter';
+    const tints = [[118, 96, 255], [76, 118, 255], [198, 102, 235], [150, 120, 255]];
+    for (let i = 0; i < 90; i++) {
+      const [x, y] = bandPoint(0.075);
+      const r = (0.06 + rnd() * 0.14) * Math.max(W, H);
+      const t = tints[Math.floor(rnd() * tints.length)];
+      const grd = g.createRadialGradient(x, y, 0, x, y, r);
+      const a = 0.05 + rnd() * 0.06;
+      grd.addColorStop(0, 'rgba(' + t + ',' + a + ')');
+      grd.addColorStop(1, 'rgba(' + t + ',0)');
+      g.fillStyle = grd;
+      g.beginPath(); g.arc(x, y, r, 0, 6.283); g.fill();
+    }
+  }
+
+  function resize() {
+    D = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = Math.round(W * D); cv.height = Math.round(H * D);
+    build();
+    if (still) draw(0);
+  }
+
+  function spike(x, y, c, s, tw) {
+    const R = 46 * s * tw;
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, R);
+    glow.addColorStop(0, 'rgba(255,255,255,0.95)');
+    glow.addColorStop(0.08, 'rgba(' + c + ',0.75)');
+    glow.addColorStop(0.35, 'rgba(' + c + ',0.16)');
+    glow.addColorStop(1, 'rgba(' + c + ',0)');
+    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(x, y, R, 0, 6.283); ctx.fill();
+    /* diffraction spikes that fade out from the core, not a hard cross */
+    const L = R * 1.4;
+    for (const [dx, dy] of [[1, 0], [0, 1]]) {
+      const lg = ctx.createLinearGradient(x - dx * L, y - dy * L, x + dx * L, y + dy * L);
+      lg.addColorStop(0, 'rgba(' + c + ',0)');
+      lg.addColorStop(0.5, 'rgba(' + c + ',0.55)');
+      lg.addColorStop(1, 'rgba(' + c + ',0)');
+      ctx.strokeStyle = lg; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(x - dx * L, y - dy * L); ctx.lineTo(x + dx * L, y + dy * L); ctx.stroke();
+    }
+  }
+
+  function draw(t) {
+    px += (tx - px) * 0.04; py += (ty - py) * 0.04;
+    ctx.setTransform(D, 0, 0, D, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.drawImage(dust, px * 6, py * 6, W, H);
+    const s = t * 0.001;
+    for (const st of stars) {
+      const tw = still ? 1 : 0.72 + 0.28 * Math.sin(s * st.sp + st.ph);
+      const x = st.x + px * 14 * st.z, y = st.y + py * 14 * st.z;
+      ctx.fillStyle = 'rgba(' + st.c + ',' + (st.a * tw).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(x, y, st.r, 0, 6.283); ctx.fill();
+    }
+    const js = Math.min(1, Math.min(W, H) / 700);
+    for (const j of jewels) {
+      const tw = still ? 1 : 0.9 + 0.1 * Math.sin(s * 0.8 + j.fx * 9);
+      spike(j.fx * W + px * 22, j.fy * H + py * 22, j.c, j.s * js, tw);
+    }
+  }
+
+  function loop(t) { draw(t); raf = requestAnimationFrame(loop); }
+  window.addEventListener('resize', resize);
+  window.addEventListener('pointermove', (e) => { tx = e.clientX / W - 0.5; ty = e.clientY / H - 0.5; }, { passive: true });
+  document.addEventListener('visibilitychange', () => {
+    if (still) return;
+    if (document.hidden) cancelAnimationFrame(raf); else raf = requestAnimationFrame(loop);
+  });
+  resize();
+  if (!still) raf = requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
