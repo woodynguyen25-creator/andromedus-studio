@@ -11,6 +11,11 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://andromedusstudio.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:image" content="https://andromedusstudio.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Andromedus Studio: an AI-native studio. We help brands grow.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,560;12..96,640&family=Space+Mono:wght@400;700&display=swap">
 <style>
   /* Single-theme by design: this page IS the void. Every colour painted. */
@@ -297,6 +302,16 @@
     #work .hint, #peek, #ruler { display: none; }
   }
   @media (min-width: 761px) and (hover: hover) { #hair { display: none; } }
+  /* r35 NO-WEBGL: the journey needs WebGL2; without it the page is one still, readable column over a deep violet sky */
+  .no-webgl, .no-webgl body { background: #000; }
+  .no-webgl body { background: radial-gradient(ellipse 140% 900px at 50% 0%, #1d1545 0%, #07051a 55%, #000 100%) no-repeat, #000; }
+  .no-webgl #track, .no-webgl #ruler, .no-webgl #prompt, .no-webgl #birth, .no-webgl #wstars, .no-webgl #tag, .no-webgl #hair,
+  .no-webgl #sheet, .no-webgl .chap .more, .no-webgl canvas { display: none !important; }
+  .no-webgl #copy { position: relative; inset: auto; min-height: 100vh; min-height: 100svh; pointer-events: auto; }
+  .no-webgl .beat { position: relative !important; inset: auto !important; left: auto !important; right: auto !important;
+    top: auto !important; bottom: auto !important; transform: none !important; opacity: 1 !important; visibility: visible !important;
+    pointer-events: auto; box-sizing: border-box; width: auto; max-width: 44rem; margin: 0 auto; padding: 14vh 6vw; text-align: left; }
+  .no-webgl #coda { min-height: 100vh; min-height: 100svh; text-align: center; }
   a.wstar { text-decoration: none; }
 </style>
 
@@ -1681,6 +1696,11 @@ const gl = canvas.getContext('webgl2', { antialias: false, alpha: false });
 // graceful exit: the copy still reads on plain black if WebGL2/HDR is absent
 if (!gl || !gl.getExtension('EXT_color_buffer_float')) {
   canvas.style.display = 'none';
+  /* r35: without WebGL2 the journey cannot run; the page becomes one still, readable column (CSS .no-webgl) instead of a
+     hero followed by 6,500 px of blank scroll (measured: scripts/no-webgl-check.mjs) */
+  document.documentElement.classList.add('no-webgl');
+  if ((window.__ORBIT_HUE || new URLSearchParams(location.search).get('hue')) === 'violet') document.documentElement.classList.add('violet'); /* the palette class is normally set further down */
+  for (const el of document.querySelectorAll('.swap')) el.classList.add('on');
   finishLoad();
   return;
 }
