@@ -302,6 +302,63 @@
     #work .hint, #peek, #ruler { display: none; }
   }
   @media (min-width: 761px) and (hover: hover) { #hair { display: none; } }
+  /* r36 THE HUD: wordmark, a Talk pill that never leaves, a journey menu whose ring fills as you travel */
+  #hud { position: fixed; top: 0; left: 0; right: 0; z-index: 11; display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 2.4vw 0; pointer-events: none; transition: opacity 0.9s ease 0.2s; }
+  body.loading #hud { opacity: 0; transition: none; } /* hide at once (no fade-out flash at load); fade in only on release */
+  body.loading #hud * { pointer-events: none !important; }
+  #hud .hud-mark, #hud .hud-right { pointer-events: auto; }
+  .hud-mark { color: #edeae4; display: inline-flex; padding: 10px 4px; line-height: 0; border-radius: 8px; opacity: 0.92; transition: opacity 0.3s; }
+  .hud-mark:hover { opacity: 1; }
+  .hud-mark:focus-visible { outline: 1px solid #b9a6ff; outline-offset: 4px; }
+  .hud-right { position: relative; display: flex; align-items: center; gap: 10px; }
+  .hud-talk, .hud-menu { height: 40px; box-sizing: border-box; display: inline-flex; align-items: center; gap: 10px; padding: 0 16px 0 18px;
+    border-radius: 999px; border: 1px solid rgba(185, 166, 255, 0.26); background: rgba(14, 9, 32, 0.46); color: #edeae4;
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); font: 400 11px/1 'Space Mono', ui-monospace, monospace;
+    letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; cursor: pointer; white-space: nowrap;
+    transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease; }
+  .hud-talk .short { display: none; }
+  .hud-talk:hover, .hud-menu:hover, #hud.open .hud-menu { border-color: rgba(185, 166, 255, 0.7); background: rgba(52, 34, 116, 0.5); }
+  .hud-talk:active, .hud-menu:active { transform: scale(0.97); }
+  .hud-talk:focus-visible, .hud-menu:focus-visible { outline: 1px solid #b9a6ff; outline-offset: 3px; }
+  .hud-talk i { width: 6px; height: 6px; border-radius: 50%; background: #b9a6ff; box-shadow: 0 0 10px #b9a6ff; animation: hudPulse 2.6s ease-in-out infinite; }
+  .hud-menu { padding-right: 8px; }
+  .hud-menu .ring { width: 24px; height: 24px; transform: rotate(-90deg); fill: none; stroke-width: 2.2; }
+  .hud-menu .ring .trk { stroke: rgba(237, 234, 228, 0.16); }
+  .hud-menu .ring .prog { stroke: #b9a6ff; stroke-dasharray: 1; stroke-dashoffset: 1; stroke-linecap: round; filter: drop-shadow(0 0 3px rgba(185, 166, 255, 0.8)); }
+  .hud-panel { position: absolute; right: 0; top: calc(100% + 10px); width: 300px; box-sizing: border-box; padding: 8px; border-radius: 18px;
+    background: rgba(9, 6, 22, 0.86); border: 1px solid rgba(185, 166, 255, 0.2); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55); opacity: 0; visibility: hidden; transform: translateY(-8px) scale(0.98); transform-origin: top right;
+    transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s linear 0.45s; }
+  #hud.open .hud-panel { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .hud-panel ol { list-style: none; margin: 0; padding: 0; }
+  .hud-panel .stop { width: 100%; display: grid; grid-template-columns: 2.4rem 1fr auto; align-items: center; padding: 11px 12px; border: 0;
+    border-radius: 12px; background: none; color: rgba(237, 234, 228, 0.66); font: 400 1.02rem/1.1 'Bricolage Grotesque', system-ui, sans-serif;
+    text-align: left; cursor: pointer; transition: background 0.25s ease, color 0.25s ease; }
+  .hud-panel .stop .n { font: 400 10px/1 'Space Mono', ui-monospace, monospace; letter-spacing: 0.14em; color: rgba(185, 166, 255, 0.62); }
+  .hud-panel .stop .dot { width: 6px; height: 6px; border-radius: 50%; background: transparent; }
+  .hud-panel .stop:hover, .hud-panel .stop:focus-visible { background: rgba(185, 166, 255, 0.09); color: #fff; outline: none; }
+  .hud-panel .stop.here { color: #edeae4; }
+  .hud-panel .stop.here .dot { background: #b9a6ff; box-shadow: 0 0 8px #b9a6ff; }
+  .hud-foot { display: flex; flex-direction: column; gap: 5px; margin-top: 6px; padding: 12px 12px 6px; border-top: 1px solid rgba(185, 166, 255, 0.13);
+    font: 400 10px/1.4 'Space Mono', ui-monospace, monospace; letter-spacing: 0.06em; color: rgba(237, 234, 228, 0.5); }
+  .hud-foot a { color: rgba(237, 234, 228, 0.82); text-decoration: none; }
+  .hud-foot a:hover { color: #b9a6ff; }
+  @keyframes hudPulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+  @media (max-width: 760px) {
+    #hud { padding: 14px 16px 0; }
+    .hud-talk, .hud-menu { height: 36px; padding: 0 13px 0 14px; letter-spacing: 0.14em; }
+    .hud-talk .long { display: none; }
+    .hud-talk .short { display: inline; }
+    .hud-mark svg { width: 108px; height: auto; }
+    .hud-right { gap: 8px; }
+    .hud-menu { padding-right: 6px; }
+    .hud-panel { width: min(300px, calc(100vw - 32px)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #hud, .hud-panel, .hud-talk, .hud-menu { transition: none; }
+    .hud-talk i { animation: none; }
+  }
   /* r35 NO-WEBGL: the journey needs WebGL2; without it the page is one still, readable column over a deep violet sky */
   .no-webgl, .no-webgl body { background: #000; }
   .no-webgl body { background: radial-gradient(ellipse 140% 900px at 50% 0%, #1d1545 0%, #07051a 55%, #000 100%) no-repeat, #000; }
@@ -321,6 +378,20 @@
 <div id="track" aria-hidden="true"></div>
 <div id="hair"></div>
 <nav id="ruler" aria-label="Sections"></nav>
+<header id="hud">
+  <a class="hud-mark" href="#top" aria-label="Andromedus Studio, back to the origin"></a>
+  <div class="hud-right">
+    <a class="hud-talk" href="mailto:hello@andromedusstudio.com?subject=Starting%20a%20conversation"><span class="long">Let&rsquo;s talk</span><span class="short">Talk</span> <i aria-hidden="true"></i></a>
+    <button type="button" class="hud-menu" aria-expanded="false" aria-controls="hudMenu">
+      <span class="lbl">Menu</span>
+      <svg class="ring" viewBox="0 0 36 36" aria-hidden="true"><circle class="trk" cx="18" cy="18" r="15"/><circle class="prog" cx="18" cy="18" r="15" pathLength="1"/></svg>
+    </button>
+    <nav id="hudMenu" class="hud-panel" aria-label="The journey">
+      <ol></ol>
+      <div class="hud-foot"><a href="mailto:hello@andromedusstudio.com">hello@andromedusstudio.com</a><span>Houston, TX</span></div>
+    </nav>
+  </div>
+</header>
 <div id="peek" aria-hidden="true"><img alt=""></div>
 <canvas id="bh-canvas" aria-hidden="true"></canvas>
 <canvas id="dust" aria-hidden="true"></canvas>
@@ -518,6 +589,60 @@
 })(typeof window !== 'undefined' ? window : globalThis);
 </script>
 <script>document.body.classList.add('loading');</script>
+<script>/* r36 THE HUD (council, award-site teardown): a persistent header - wordmark, a "Let's talk" pill that never leaves, and a
+   journey menu whose button carries an orbit ring that fills as you travel. Jumps use the scene's own jumpTo when WebGL runs
+   (window.__hudJump, set in the main script) and plain anchors in the still no-WebGL column. */
+(function () {
+  const hud = document.getElementById('hud');
+  if (!hud) return;
+  const mark = hud.querySelector('.hud-mark');
+  if (window.andromedusLettering) mark.innerHTML = window.andromedusLettering('ANDROMEDUS', { holeO: true, size: 12, stroke: 9, tracking: 34 });
+  else mark.textContent = 'ANDROMEDUS';
+  const btn = hud.querySelector('.hud-menu');
+  const list = hud.querySelector('.hud-panel ol');
+  const prog = hud.querySelector('.ring .prog');
+  /* journey stops: label, journey progress p, element for the still column */
+  const chaps = document.querySelectorAll('.chap');
+  const STOPS = [['Origin', 0, '#copy'], ['Identity', 0.16, chaps[0]], ['Presence', 0.29, chaps[1]], ['Systems', 0.42, chaps[2]],
+    ['Follow-up', 0.55, chaps[3]], ['The fall', 0.70, '#plungeline'], ['The other side', 0.95, '#coda']];
+  const items = STOPS.map(([label, , el], i) => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'stop';
+    b.innerHTML = '<span class="n">' + String(i).padStart(2, '0') + '</span><span class="t"></span><span class="dot" aria-hidden="true"></span>';
+    b.querySelector('.t').textContent = label;
+    b.addEventListener('click', (e) => { e.stopPropagation(); go(i); });
+    li.append(b); list.append(li);
+    return b;
+  });
+  function setOpen(open) {
+    hud.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    btn.querySelector('.lbl').textContent = open ? 'Close' : 'Menu';
+  }
+  function go(i) {
+    setOpen(false);
+    const [, p, target] = STOPS[i];
+    if (window.__hudJump) { window.__hudJump(p); return; }
+    const el = typeof target === 'string' ? document.querySelector(target) : target;
+    if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }
+  btn.addEventListener('click', (e) => { e.stopPropagation(); setOpen(!hud.classList.contains('open')); });
+  mark.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); go(0); });
+  hud.querySelector('.hud-panel').addEventListener('click', (e) => e.stopPropagation());
+  addEventListener('click', () => { if (hud.classList.contains('open')) setOpen(false); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && hud.classList.contains('open')) { setOpen(false); btn.focus(); } });
+  let lastP = -1;
+  window.__hudProgress = (p) => {
+    if (Math.abs(p - lastP) < 0.002) return;
+    lastP = p;
+    prog.style.strokeDashoffset = (1 - p).toFixed(4);
+    let here = 0; for (let i = 0; i < STOPS.length; i++) if (p >= STOPS[i][1] - 0.04) here = i;
+    items.forEach((b, i) => { b.classList.toggle('here', i === here); if (i === here) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+  };
+  window.__hudProgress(0);
+})();
+</script>
 <script>
 /* split the headline into letters for the condense-in (word-wrapped safely:
    words stay whole spans so the browser never breaks mid-word) */
@@ -1842,6 +1967,7 @@ function paceMap(x, a, b) { for (let i = 1; i < PACE_K.length; i++) { if (x <= P
   return k0[b] + (k1[b] - k0[b]) * (x - k0[a]) / Math.max(1e-6, k1[a] - k0[a]); } } return 1; }
 const PACE = (sf) => paceMap(sf, 0, 1);
 const PACE_INV = (pp) => paceMap(pp, 1, 0);
+window.__hudJump = (pp) => jumpTo(scrollMax() * PACE_INV(pp), !reduced); /* r36: the HUD menu travels the journey with the scene's own glide */
 function jumpTo(top, smooth) {
   if (!vstage) { scrollTo({ top, behavior: smooth ? 'smooth' : 'auto' }); return; }
   vs.vel = 0;
@@ -2141,6 +2267,7 @@ function applyOrbit(tNow) {
   setS(newSky, 'opacity', p > SKY_A && p < 0.9 ? '1' : '0');
   setS(hair, 'transform', 'scaleX(' + p.toFixed(3) + ')');
   drawRuler(p); drawPeek();
+  if (window.__hudProgress) window.__hudProgress(p);
   if (orbit.p < 0.88 && pk.on) { pk.on = false; peek.classList.remove('on'); }
   placeWorkStars(p);
   /* telemetry: both numbers come straight from the metric, nothing invented */
