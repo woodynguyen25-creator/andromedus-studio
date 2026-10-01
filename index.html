@@ -1761,6 +1761,13 @@ void main() {
 /* ── harness ─────────────────────────────────────────────────────────── */
 
 const canvas = document.getElementById('bh-canvas');
+/* r37 PHONE STRETCH FIX: the canvases are displayed 100lvh tall (the height with the URL bar hidden) but their buffers were sized
+   from innerHeight at load (bar shown), and the bar's resize events are swallowed below - so the picture was stretched ~8-12 %
+   vertically and the hole read as an ellipse. Every buffer and every scene-to-screen mapping now uses the DISPLAYED height. */
+const lvhProbe = document.createElement('div');
+lvhProbe.style.cssText = 'position:fixed;left:0;top:0;width:0;height:100vh;height:100lvh;visibility:hidden;pointer-events:none';
+document.body.append(lvhProbe);
+const VH = () => (document.querySelector('[data-virtual-scroll]') ? innerHeight : Math.max(innerHeight, lvhProbe.offsetHeight || 0));
 /* the mobile URL bar fires resize on every scroll start: swallow those before any listener reallocates */
 let lastW = innerWidth; let lastH = innerHeight;
 addEventListener('resize', (e) => {
@@ -1797,11 +1804,11 @@ function stepBirth(now) {
   if (!birth.active) return;
   const t = birth.skip ? BIRTH_T : BIRTH_FREEZE >= 0 ? BIRTH_FREEZE : (now - birth.t0); /* dev ?birtht= freezes the birth for stills */
   birth.v = clamp01(t / BIRTH_T);
-  const hx = state.focusX * innerWidth, hy = state.focusY * innerHeight;
+  const hx = state.focusX * innerWidth, hy = state.focusY * VH();
   const pt = birthEl && birthEl.querySelector('.pt'); const ring = birthEl && birthEl.querySelector('.ring');
   if (pt) { const c = sstep(0.05, 0.62, t) * (1 - sstep(0.7, 0.95, t)); const sc = mix(1.0, 0.12, sstep(0.05, 0.7, t)) + 2.2 * sstep(0.68, 0.8, t) * (1 - sstep(0.8, 1.0, t));
     pt.style.opacity = c.toFixed(3); pt.style.transform = 'translate(' + hx.toFixed(1) + 'px,' + hy.toFixed(1) + 'px) scale(' + sc.toFixed(3) + ')'; }
-  if (ring) { const u = clamp01((t - 0.7) / 0.9); const R = Math.max(innerWidth, innerHeight) * 0.0062 * easeOut3(u);
+  if (ring) { const u = clamp01((t - 0.7) / 0.9); const R = Math.max(innerWidth, VH()) * 0.0062 * easeOut3(u);
     ring.style.opacity = (u > 0 ? (1 - u) * 0.9 : 0).toFixed(3); ring.style.transform = 'translate(' + hx.toFixed(1) + 'px,' + hy.toFixed(1) + 'px) scale(' + R.toFixed(3) + ')'; }
   if (!birth.wmOn && t > 2.1) { birth.wmOn = true; const wm = birthEl.querySelector('.wm'); if (wm) wm.classList.add('lit'); }
   if (!birth.copyOut && t > 2.9) { birth.copyOut = true; document.body.classList.remove('loading'); }
@@ -2067,7 +2074,7 @@ const ANCHORS = narrow ? [[-0.44, 0.82, 5.0], [0.50, 0.58, 4.2], [-0.06, -0.74, 
 const anchorPos = new Float32Array(9);
 /* star 01 = gold (the next brand), Kairo = their ember accent, Speedy Cleans = their blue */
 const ANCHOR_COLS = new Float32Array([1.0, 0.78, 0.40, 1.0, 0.40, 0.20, 0.34, 0.60, 1.0]);
-function skyView() { const asp = innerWidth / Math.max(1, innerHeight); return [SKY_TH * asp, SKY_TH]; }
+function skyView() { const asp = innerWidth / Math.max(1, VH()); return [SKY_TH * asp, SKY_TH]; }
 function stepLook() {
   if (!reducedOrTouch) { look.tx = pointer.tx; look.ty = pointer.ty; }
   const px = look.x; const py = look.y;
@@ -2094,7 +2101,7 @@ function placeWorkStars(p) {
     const x = anchorPos[i * 3] - ox; const y = anchorPos[i * 3 + 1] - oy; const z = anchorPos[i * 3 + 2];
     const x1 = x * cy + z * sy; const z1 = -x * sy + z * cy; const y2 = y * cp - z1 * sp; const z2 = y * sp + z1 * cp;
     const w = Math.max(0.05, -z2);
-    const sx = (x1 / (w * v[0]) * 0.5 + 0.5) * innerWidth; const sY = (0.5 - y2 / (w * v[1]) * 0.5) * innerHeight;
+    const sx = (x1 / (w * v[0]) * 0.5 + 0.5) * innerWidth; const sY = (0.5 - y2 / (w * v[1]) * 0.5) * VH();
     const s = wstars[i];
     const right = ANCHORS[i][0] > 0.2;
     if (!s.w) { s.w = s.el.offsetWidth; s.el.classList.toggle('rt', right); }
@@ -2191,7 +2198,7 @@ function measureLetters() {
     const b = el.getBoundingClientRect();
     return { el, x: b.left + b.width / 2, y: b.top + b.height / 2, order: 0 };
   });
-  const hx = (narrow ? 0.5 : 0.70) * innerWidth; const hy = (narrow ? 0.75 : 0.37) * innerHeight;
+  const hx = (narrow ? 0.5 : 0.70) * innerWidth; const hy = (narrow ? 0.75 : 0.37) * VH();
   const sorted = [...letters].sort((a, b) => Math.hypot(a.x - hx, a.y - hy) - Math.hypot(b.x - hx, b.y - hy));
   sorted.forEach((l, i) => { l.order = i / Math.max(1, sorted.length - 1); });
 }
@@ -2200,7 +2207,7 @@ function dragHero(e) {
   if (Math.abs(e - lastHeroE) < 0.0005) return;
   lastHeroE = e;
   if (!letters.length && e > 0) measureLetters();
-  const hx = state.focusX * innerWidth; const hy = state.focusY * innerHeight;
+  const hx = state.focusX * innerWidth; const hy = state.focusY * VH();
   for (const l of letters) {
     const t = clamp01(e * 1.7 - l.order * 0.7);
     const g = t * t;
@@ -2321,7 +2328,7 @@ const veilC = document.getElementById('veil');
 const vctx = veilC.getContext('2d');
 let veilSprite = null; let veilDrawn = false;
 function buildVeil() {
-  veilC.width = Math.max(2, Math.round(innerWidth * 0.5)); veilC.height = Math.max(2, Math.round(innerHeight * 0.5)); /* a host iframe can boot at 0px */
+  veilC.width = Math.max(2, Math.round(innerWidth * 0.5)); veilC.height = Math.max(2, Math.round(VH() * 0.5)); /* a host iframe can boot at 0px */
   const W = veilC.width * 1.15; const H = veilC.height * 1.5;
   const raw = document.createElement('canvas'); raw.width = Math.round(W); raw.height = Math.round(H);
   const c = raw.getContext('2d');
@@ -2399,7 +2406,7 @@ let ringCalm = 0; /* 0 under way, eases to 1 at rest */
 const spinT = { t: 0, last: -1 };
 function buildSky() {
   skyD = lite ? 1 : Math.min(devicePixelRatio || 1, 1.5);
-  const W = newSky.width = Math.max(2, Math.round(innerWidth * skyD)); const H = newSky.height = Math.max(2, Math.round(innerHeight * skyD));
+  const W = newSky.width = Math.max(2, Math.round(innerWidth * skyD)); const H = newSky.height = Math.max(2, Math.round(VH() * skyD));
   let s = 11;
   const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
   const gauss = () => (rnd() + rnd() + rnd() + rnd() - 2) * 0.7;
@@ -2539,7 +2546,7 @@ function placeEnquiryTag() {
   let st = 0; for (let i = 0; i < ENQ_STAGES.length; i++) if (pp >= ENQ_STAGES[i][0]) st = i;
   if (st !== enqStage) { enqStage = st; enqTag.querySelector('b').textContent = ENQ_STAGES[st][1]; }
   const x = ENQ.r * Math.cos(ENQ.phi); const z = ENQ.r * Math.sin(ENQ.phi);
-  const pr = project(x, 0, z, innerWidth, innerHeight);
+  const pr = project(x, 0, z, innerWidth, VH());
   /* lensing moves the far-side image above the hole: the tag only rides the knot on the near half */
   const toHole = [-cam.c[0], -cam.c[1], -cam.c[2]]; const toKnot = [x - cam.c[0], -cam.c[1], z - cam.c[2]];
   const nearSide = (toKnot[0] * toKnot[0] + toKnot[1] * toKnot[1] + toKnot[2] * toKnot[2]) < (toHole[0] * toHole[0] + toHole[1] * toHole[1] + toHole[2] * toHole[2]);
@@ -2706,11 +2713,11 @@ let needReset = true;
 
 function alloc() {
   const w = Math.max(8, Math.round(innerWidth * state.scale));
-  const h = Math.max(8, Math.round(innerHeight * state.scale));
+  const h = Math.max(8, Math.round(VH() * state.scale));
   /* phones: the canvas is larger than the march buffer; COMP upsamples into it */
   const outK = Math.max(state.scale, lite ? Math.min(devicePixelRatio || 1, 2) * 0.75 : 1); /* desktop composites at CSS resolution */
   canvas.width = Math.max(w, Math.round(innerWidth * outK));
-  canvas.height = Math.max(h, Math.round(innerHeight * outK));
+  canvas.height = Math.max(h, Math.round(VH() * outK));
   sceneT = makeTarget(w, h);
   const loK = lite ? 0.70 : 0.8;
   sceneLo = makeTarget(Math.max(8, Math.round(w * loK)), Math.max(8, Math.round(h * loK)));
@@ -2829,7 +2836,7 @@ function render(tNow, skipGL) {
       gl.uniform1f(uni(progStars, 'uMaxPx'), lite ? 120 : 200);
       gl.uniform3fv(uni(progStars, 'uAnchorCol[0]'), ANCHOR_COLS);
       gl.uniform1f(uni(progStars, 'uHeroes'), lite ? 12 : 18);
-      gl.uniform1f(uni(progStars, 'uCssH'), innerHeight);
+      gl.uniform1f(uni(progStars, 'uCssH'), VH());
       gl.uniform1f(uni(progStars, 'uHaloK'), lite ? 0.04 : 0.08);
       gl.uniform1f(uni(progStars, 'uStarGain'), HQ('sg', lite ? 1.5 : 1.9));
       gl.uniform3fv(uni(progStars, 'uAnchor[0]'), anchorPos);
