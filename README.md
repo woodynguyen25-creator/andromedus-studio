@@ -10,7 +10,7 @@ git add -A && git commit -m "release: <what changed>" && git push
 GitHub Pages redeploys `main` in about a minute.
 
 `pull-site.js` sets the violet build, adds the page identity (title, description, share tags, favicon), points every
-"Start the conversation" at hello@andromedusstudio.com, and ships only work cleared for public view (Kairo, Speedy Cleans).
+"Start the conversation" at hello@andromedusstudio.com, and ships only work cleared for public view (Kairo).
 It fails the build if anything private or a dead `href="#"` button gets through.
 
 ## Fallback

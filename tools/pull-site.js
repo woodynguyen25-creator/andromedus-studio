@@ -9,8 +9,8 @@ const SRC_DIR = process.env.ORBIT_SRC || 'C:/Github Repos/lucky-dog-landing';
 const EMAIL = 'hello@andromedusstudio.com';
 const MAILTO = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('Starting a conversation');
 /* only work that is cleared for public view ships (Molecules is a paused client in a regulated category: never public) */
-const WORK_FILES = ['kairo-thumb.webp', 'kairo-long.webp', 'speedy-thumb.webp', 'speedy-long.webp'];
-const FORBIDDEN = [/molecules/i, /kayne/i, /sslip\.io/i, /basic[- ]?auth/i, /990-0072/, /FAL_KEY/];
+const WORK_FILES = ['kairo-thumb.webp', 'kairo-long.webp']; /* Speedy Cleans removed 2026-10-09: client declined (10/06) */
+const FORBIDDEN = [/molecules/i, /kayne/i, /sslip\.io/i, /basic[- ]?auth/i, /990-0072/, /FAL_KEY/, /speedy/i];
 
 let h = fs.readFileSync(path.join(SRC_DIR, 'orbit.html'), 'utf8').replace(/\r\n/g, '\n');
 const swap = (a, b, count = 1) => {

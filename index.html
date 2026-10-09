@@ -457,7 +457,6 @@
 <div id="wstars" aria-label="Selected work">
   <a class="wstar" href="mailto:hello@andromedusstudio.com?subject=Starting%20a%20conversation"><span class="n" style="color:#f0c466">01 &middot; NEXT</span><span class="t">Your brand</span><span class="k">START THE CONVERSATION</span></a>
   <button type="button" class="wstar" data-img="/work/kairo-long.webp"><span class="n" style="color:#ff7a45">02</span><span class="t">Kairo</span><span class="k">BRAND &middot; STORE</span><img src="/work/kairo-thumb.webp" alt="" decoding="async" width="132" height="88"></button>
-  <button type="button" class="wstar" data-img="/work/speedy-long.webp"><span class="n" style="color:#6fa8ff">03</span><span class="t">Speedy Cleans</span><span class="k">SITE &middot; LOCAL SERVICE</span><img src="/work/speedy-thumb.webp" alt="" decoding="async" width="132" height="88"></button>
 </div>
 <p id="tag">GARGANTUA &middot; SCHWARZSCHILD r&#8347; = 1 &middot; ONE RAY PER PIXEL</p>
 
@@ -2072,8 +2071,8 @@ const SKY_TH = Math.tan(17.5 * Math.PI / 180);
 const look = { tx: 0, ty: 0, x: 0, y: 0, speed: 0, dragX: null };
 const ANCHORS = narrow ? [[-0.44, 0.82, 5.0], [0.50, 0.58, 4.2], [-0.06, -0.74, 6.0]] : [[-0.62, 0.46, 5.0], [0.68, 0.50, 4.2], [0.38, -0.62, 6.0]]; /* r33: Kairo lifted off the headline line */
 const anchorPos = new Float32Array(9);
-/* star 01 = gold (the next brand), Kairo = their ember accent, Speedy Cleans = their blue */
-const ANCHOR_COLS = new Float32Array([1.0, 0.78, 0.40, 1.0, 0.40, 0.20, 0.34, 0.60, 1.0]);
+/* star 01 = gold (the next brand), Kairo = their ember accent; star 3 stays dark until the next cleared client (additive blend: black = invisible) */
+const ANCHOR_COLS = new Float32Array([1.0, 0.78, 0.40, 1.0, 0.40, 0.20, 0.0, 0.0, 0.0]);
 function skyView() { const asp = innerWidth / Math.max(1, VH()); return [SKY_TH * asp, SKY_TH]; }
 function stepLook() {
   if (!reducedOrTouch) { look.tx = pointer.tx; look.ty = pointer.ty; }
@@ -2159,7 +2158,7 @@ const SHEETS = [
   { k: '01 \u2014 Identity', h: 'Who you are, drawn from scratch.', b: 'We start with who you are and who you are for, then build the name, the mark, the colours and the way you sound, ready for signs, shirts, socials and the site.',
     proof: '<figure><img src="/work/kairo-thumb.webp" alt="Kairo brand and store" width="264" height="176"><figcaption>Kairo \u00b7 brand and store</figcaption></figure>' },
   { k: '02 \u2014 Presence', h: 'A site that earns the call.', b: 'Loads fast on a phone, shows up when people search for what you do, and makes calling or booking one tap away.',
-    proof: '<figure><img src="/work/speedy-thumb.webp" alt="Speedy Cleans website" width="264" height="176"><figcaption>Speedy Cleans \u00b7 live site, Houston</figcaption></figure>' },
+    proof: '<p class="body" style="margin:0">Ask, and we will show you live sites we have built.</p>' },
   { k: '03 \u2014 Systems', h: 'Your front desk, always on.', b: 'An AI assistant that answers calls and texts in your words, books the appointment straight onto your calendar, and texts back anyone you missed. You get a short summary; your customer gets an answer.',
     proof: '<p class="body" style="margin:0">Ask, and we will walk you through it live.</p>' },
   { k: '04 \u2014 Follow-up', h: 'Nobody slips through.', b: 'Reminders before the appointment, a review request after it, and the quote that gets chased, all sent on time without you.',
